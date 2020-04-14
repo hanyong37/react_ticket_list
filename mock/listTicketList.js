@@ -374,25 +374,20 @@ function getRule(req, res, u) {
     });
   }
 
-  if (params.status) {
-    const status = params.status.split(',');
-    let filterDataSource = [];
-    status.forEach(s => {
-      filterDataSource = filterDataSource.concat(
-        dataSource.filter(item => {
-          if (parseInt(`${item.status}`, 10) === parseInt(s.split('')[0], 10)) {
-            return true;
-          }
-
-          return false;
-        }),
-      );
-    });
-    dataSource = filterDataSource;
+  if (params.starred) {
+    dataSource = dataSource.filter(data => data.starred && data.starred.includes(params.starred));
   }
 
-  if (params.name) {
-    dataSource = dataSource.filter(data => data.name.includes(params.name || ''));
+  if (params.confirm_number) {
+    dataSource = dataSource.filter(data => data.user && data.user.bookings && data.user.bookings.map((b) => b.confirm_number).join('').includes(params.confirm_number));
+  }
+
+  if (params.house_tags) {
+    dataSource = dataSource.filter(data => data.house_tags && data.house_tags.join('').includes(params.house_tags || ''));
+  }
+
+  if (params.house_name) {
+    dataSource = dataSource.filter(data => data.house_name && data.house_name.includes(params.house_name || ''));
   }
 
   const result = {

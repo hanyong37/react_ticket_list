@@ -1,5 +1,5 @@
 import { DownOutlined, PlusOutlined } from '@ant-design/icons';
-import { Avatar, Button, Divider, Dropdown, Menu, message } from 'antd';
+import { Avatar, Button, Dropdown, Menu, message } from 'antd';
 import React, { useState, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
@@ -84,6 +84,7 @@ const TableList = () => {
     {
       title: 'User',
       dataIndex: 'user',
+      hideInSearch: true,
       render: (_, record) => (
         <>
           <Avatar src={record.user.avatar} />
@@ -94,6 +95,24 @@ const TableList = () => {
     {
       title: 'Starred',
       dataIndex: 'starred',
+      valueEnum: {
+        orange: {
+          text: 'Orange',
+          status: 'orange',
+        },
+        pink: {
+          text: 'Pink',
+          status: 'pink',
+        },
+        red: {
+          text: 'Red',
+          status: 'red',
+        },
+        green: {
+          text: 'Green',
+          status: 'green',
+        }
+      },
       render: (_, record) => (
         <>
           <FontAwesomeIcon icon={faStar} color={record.starred} />
@@ -112,14 +131,17 @@ const TableList = () => {
     },
     {
       title: 'Checkin',
+      hideInSearch: true,
       dataIndex: 'dtstart',
     },
     {
       title: 'Checkout',
+      hideInSearch: true,
       dataIndex: 'dtend',
     },
     {
       title: 'Description',
+      hideInSearch: true,
       dataIndex: 'description',
       renderText: (val) => ( <a herf='#'> {val} </a>),
       render: (_, record) => (
@@ -131,8 +153,23 @@ const TableList = () => {
     },
     {
       title: 'Update',
+      hideInSearch: true,
       dataIndex: 'updated_at',
       renderText: (val) => new Date(val).toDateString(),
+    },
+    {
+      title: 'Property Tag',
+      hideInTable: true,
+      dataIndex: 'house_tags',
+    },
+    {
+      title: 'Confirm Number',
+      dataIndex: 'confirm_number',
+      render: (_, record) => (
+        <> 
+          <span>{record.user.bookings.length < 1 ? '' : record.user.bookings[0].confirm_number} </span>
+        </>
+      )
     }
   ];
   return (
