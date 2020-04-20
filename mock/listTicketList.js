@@ -374,6 +374,22 @@ function getRule(req, res, u) {
     });
   }
 
+  if (params.type) {
+    switch(params.type) {
+      case 'inbox':
+        dataSource = dataSource.filter(data => data.archived === false);
+        break;
+      case 'archived':
+        dataSource = dataSource.filter(data => data.archived === true);
+        break;
+      case 'starred':
+        dataSource = dataSource.filter(data => data.starred );
+        break;
+      default:
+        // code block
+    } 
+  }
+
   if (params.starred) {
     dataSource = dataSource.filter(data => data.starred && data.starred.includes(params.starred));
   }

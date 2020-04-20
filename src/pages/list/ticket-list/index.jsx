@@ -93,6 +93,25 @@ const TableList = () => {
       ),
     },
     {
+      title: 'Type',
+      dataIndex: 'archived',
+      hideInTable: true,
+      valueEnum: {
+        inbox: {
+          text: 'Inbox',
+          status: 'inbox',
+        },
+        archived: {
+          text: 'Archived',
+          status: 'archived',
+        },
+        starred: {
+          text: 'Starred',
+          status: 'starred',
+        }
+      },
+    },
+    {
       title: 'Starred',
       dataIndex: 'starred',
       valueEnum: {
@@ -177,31 +196,42 @@ const TableList = () => {
       <ProTable
         headerTitle="Ticket List"
         actionRef={actionRef}
-        rowKey="key"
+        rowKey="id"
         toolBarRender={(action, { selectedRows }) => [
-          <Button icon={<PlusOutlined />} type="primary" onClick={() => handleModalVisible(true)}>
+          <Button type="primary" onClick={() => handleModalVisible(true)}>
             Create
           </Button>,
           selectedRows && selectedRows.length > 0 && (
-            <Dropdown
-              overlay={
-                <Menu
-                  onClick={async e => {
-                    if (e.key === 'remove') {
-                      await handleRemove(selectedRows);
-                      action.reload();
-                    }
-                  }}
-                  selectedKeys={[]}
-                >
-                  <Menu.Item key="remove">Delete</Menu.Item>
-                </Menu>
-              }
-            >
-              <Button>
-                批量操作 <DownOutlined />
-              </Button>
-            </Dropdown>
+            <Button type="danger" onClick={() => alert('deleted!')}>
+              Delete
+            </Button>
+          ),
+          selectedRows && selectedRows.length > 0 && (
+            <Button type="default" onClick={() => alert('Archive')}>
+              Archive
+            </Button>
+          ),
+          selectedRows && selectedRows.length > 0 && (
+            <>
+              <Dropdown
+                overlay={
+                  <Menu
+                    onClick={async e => {
+                      alert('star to '+e.key)
+                    }}
+                    selectedKeys={[]}
+                  >
+                    <Menu.Item key="orange"> <FontAwesomeIcon icon={faStar} color="orange"/> </Menu.Item>
+                    <Menu.Item key="red"><FontAwesomeIcon icon={faStar} color="red"/></Menu.Item>
+                    <Menu.Item key="pink"><FontAwesomeIcon icon={faStar} color="pink"/></Menu.Item>
+                  </Menu>
+                }
+              >
+                <Button>
+                  Star <DownOutlined />
+                </Button>
+              </Dropdown>
+            </>
           ),
         ]}
         tableAlertRender={(selectedRowKeys, selectedRows) => (
@@ -215,9 +245,6 @@ const TableList = () => {
               {selectedRowKeys.length}
             </a>{' '}
             项&nbsp;&nbsp;
-            <span>
-              服务调用次数总计 {selectedRows.reduce((pre, item) => pre + item.callNo, 0)} 万
-            </span>
           </div>
         )}
         request={params => queryRule(params)}
